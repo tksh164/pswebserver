@@ -94,8 +94,7 @@ try {
     # Request handling loop
     while ($listener.IsListening) {
         $context = $listener.GetContext()
-        Write-Verbose -Message ('From {0} to {1}' -f $Context.Request.UserHostAddress, $Context.Request.Url)
-        Write-Verbose -Message ('{0}: {1}' -f $context.Request.HttpMethod, $context.Request.RawUrl)
+        Write-Verbose -Message ("{0}: {1} - {2} => {3}" -f $context.Request.HttpMethod, $context.Request.RawUrl, $Context.Request.UserHostAddress, $Context.Request.Url)
         if ($context.Request.HttpMethod -eq 'GET') {
             if (HandleGetRequest -context $context) { break }
         }
