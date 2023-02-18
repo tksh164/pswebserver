@@ -22,9 +22,16 @@ function HandleGetRequest
             $isExitRequested = $true
         }
         Default {
-            # TODO: File
-            # $content = Get-Content -Raw -LiteralPath 'C:\temp\index.html'
-            FillResponse -Response $Context.Response -ResponseBody 'Not found' -StatusCode NotFound
+            # Respond to the file content if the specified file exists.
+            $filePath = [IO.Path]::GetFullPath((Join-Path -Path $PSScriptRoot -ChildPath $Context.Request.RawUrl))
+            if ($filePath.StartsWith($PSScriptRoot) -and (Test-Path -PathType Leaf -LiteralPath $filePath)) {
+                $content = Get-Content -Raw -LiteralPath $filePath
+                FillResponse -Response $Context.Response -ResponseBody $content
+            }
+            else {
+                FillResponse -Response $Context.Response -ResponseBody 'Not found' -StatusCode NotFound
+            }
+
         }
     }
 
